@@ -107,7 +107,7 @@ export default function QuestionConvergeSection({
 
       const getRingRadius = () => {
         const base = Math.min(getVW(), getVH());
-        return base * (isSM ? 0.14 : isMD ? 0.16 : is2XL ? 0.22 : isXL ? 0.20 : 0.16);
+        return base * (isSM ? 0.12 : isMD ? 0.15 : is2XL ? 0.22 : isXL ? 0.20 : 0.16);
       };
 
       // Angles are stable across calls
@@ -120,8 +120,7 @@ export default function QuestionConvergeSection({
         let sum = 0;
         for (let i = 0; i < cards.length; i++) {
           const el = cards[i];
-          const er = el.getBoundingClientRect();
-          const halfH = Math.min(er.height / 2, vh / 2 - margin - 1);
+          const halfH = Math.min(el.offsetHeight / 2, vh / 2 - margin - 1);
           const minY = -vh / 2 + halfH + margin;
           const maxY =  vh / 2 - halfH - margin;
           const raw = Math.sin(angles[i]) * rr;
@@ -139,8 +138,7 @@ export default function QuestionConvergeSection({
         let sum = 0;
         for (let i = 0; i < cards.length; i++) {
           const el = cards[i];
-          const er = el.getBoundingClientRect();
-          const halfW = Math.min(er.width / 2, vw / 2 - margin - 1);
+          const halfW = Math.min(el.offsetWidth / 2, vw / 2 - margin - 1);
           const minX = -vw / 2 + halfW + margin;
           const maxX =  vw / 2 - halfW - margin;
           const raw = Math.cos(angles[i]) * rr;
@@ -270,8 +268,7 @@ export default function QuestionConvergeSection({
             const raw = Math.cos(angle) * rr + offsetX;
             const vw = getVW();
             const margin = isSM ? 10 : isMD ? 14 : 12;
-            const er = el.getBoundingClientRect();
-            const halfW = Math.min(er.width / 2, vw / 2 - margin - 1);
+            const halfW = Math.min(el.offsetWidth / 2, vw / 2 - margin - 1);
             const minX = -vw / 2 + halfW + margin;
             const maxX =  vw / 2 - halfW - margin;
             return Math.max(minX, Math.min(maxX, raw));
@@ -283,8 +280,7 @@ export default function QuestionConvergeSection({
             const raw = Math.sin(angle) * rr + offsetY;
             const vh = getVH();
             const margin = isSM ? 10 : isMD ? 14 : 12;
-            const er = el.getBoundingClientRect();
-            const halfH = Math.min(er.height / 2, vh / 2 - margin - 1);
+            const halfH = Math.min(el.offsetHeight / 2, vh / 2 - margin - 1);
             const minY = -vh / 2 + halfH + margin;
             const maxY =  vh / 2 - halfH - margin;
             return Math.max(minY, Math.min(maxY, raw));
@@ -325,7 +321,7 @@ export default function QuestionConvergeSection({
       );
 
       // Center squeeze to close any remaining gap
-      const centerBias = isSM ? 0.88 : isMD ? 0.85 : is2XL ? 0.90 : isXL ? 0.88 : 0.86;
+      const centerBias = isSM ? 0.82 : isMD ? 0.84 : is2XL ? 0.90 : isXL ? 0.88 : 0.86;
       tl.to(
         cards,
         {
@@ -335,6 +331,22 @@ export default function QuestionConvergeSection({
           ease: "power2.in",
         },
         ">-0.05"
+      );
+
+      const toward0 = (v: number, px: number) => (v > 0 ? Math.max(0, v - px) : Math.min(0, v + px));
+      const nudgeX = isSM ? 4 : isMD ? 6 : 8;
+      const nudgeY = isSM ? 3 : isMD ? 4 : 6;
+
+      tl.to(
+        cards,
+        {
+          x: (_: number, el: HTMLElement) => toward0(gsap.getProperty(el, "x") as number, nudgeX),
+          y: (_: number, el: HTMLElement) => toward0(gsap.getProperty(el, "y") as number, nudgeY),
+          duration: 0.18,
+          ease: "power1.out",
+          stagger: 0,
+        },
+        ">-0.02"
       );
 
       // Cleanup on unmount
@@ -352,7 +364,7 @@ export default function QuestionConvergeSection({
     <section
       id={id}
       ref={rootRef}
-      className={`relative isolate flex items-center justify-center min-h-[100svh] w-full max-w-[100vw] overflow-x-hidden bg-background bg-grid-pattern overflow-hidden contain-layout contain-paint ${className ?? ""}`}
+      className={`relative isolate flex items-center justify-center min-h-[100svh] w-full max-w-full overflow-x-hidden bg-background bg-grid-pattern overflow-hidden contain-layout contain-paint ${className ?? ""}`}
     >
       {/* Centered content wrapper (scaled by GSAP) */}
       <div
@@ -362,9 +374,11 @@ export default function QuestionConvergeSection({
                    lg:max-w-[min(82vw,72ch)] xl:max-w-[min(78vw,84ch)] 2xl:max-w-[min(74vw,96ch)]"
       >
         {/* Kicker */}
-        <span className="inline-block mb-3 font-extrabold tracking-widest uppercase text-md
-                         sm:text-base md:text-xl lg:text-2xl
-                         px-5.5 py-2 rounded-full bg-primary/10 text-primary">
+        <span
+          className="hidden sm:inline-block mb-3 font-extrabold tracking-widest uppercase text-md
+                    sm:text-base md:text-xl lg:text-2xl
+                    px-5.5 py-2 rounded-full bg-primary/10 text-primary"
+        >
           {resolvedKicker}
         </span>
 

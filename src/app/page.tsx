@@ -14,7 +14,7 @@ export default function Page() {
 
       {/* Primer converge section, solo como intro */}
       <QuestionConvergeSection
-        title="Simplemente es el concurso de programación más antiguo, el más grande y el más importante"
+        title="El concurso de programación más antiguo, el más grande y el más importante"
         kicker="¿Qué es el ICPC?"
         images={[
           { src: "/images/event.png", alt: "Equipo 1" },
