@@ -385,7 +385,7 @@ export default function QuestionConvergeSection({
         {/* Title 1 */}
         <h1
           ref={qRef}
-          className="font-nuno break-words hyphens-auto text-balance
+          className="font-nuno break-words hyphens-none text-wrap
                      leading-tight md:leading-tight lg:leading-[1.05]
                      font-extrabold tracking-tight select-none text-blue-950
                      text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-7xl"
