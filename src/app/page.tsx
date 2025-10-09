@@ -17,12 +17,12 @@ export default function Page() {
         title="El concurso de programación más antiguo, el más grande y el más importante"
         kicker="¿Qué es el ICPC?"
         images={[
-          { src: "/images/event.png", alt: "Equipo 1" },
-          { src: "/images/medals.png", alt: "Equipo 2" },
-          { src: "/images/registration1.png", alt: "Equipo 3" },
-          { src: "/images/trophy.png", alt: "Equipo 4" },
-          { src: "/images/champions.png", alt: "Equipo 5" },
-          { src: "/images/team.png", alt: "Equipo 6" },
+          { src: "/images/what_is_icpc/event.png" },
+          { src: "/images/what_is_icpc/medals.png" },
+          { src: "/images/what_is_icpc/registration1.png" },
+          { src: "/images/what_is_icpc/trophy.png" },
+          { src: "/images/what_is_icpc/champions.png" },
+          { src: "/images/what_is_icpc/team.png" },
         ]}
       />
 
@@ -35,14 +35,19 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="what-is" className="snap-start min-h-screen grid place-items-center px-6 bg-slate-200">
-        <div className="max-w-4xl">
-          <h2 className="font-heading text-4xl md:text-5xl font-semibold">En que consiste</h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Aqui voy a usar mi wrapper
-          </p>
-        </div>
-      </section>
+      {/* Segunda converge section, cual es el desafio */}
+      <QuestionConvergeSection
+        title="Equipos de tres integrantes compiten contra el reloj para resolver problemas algorítmicos"
+        kicker="¿Cuál es el desafío?"
+        images={[
+          { src: "/images/what_is_challenge/team1.jpg" },
+          { src: "/images/what_is_challenge/team2.jpg" },
+          { src: "/images/what_is_challenge/team3.jpg" },
+          { src: "/images/what_is_challenge/team4.jpg" },
+          { src: "/images/what_is_challenge/team5.jpg" },
+          { src: "/images/what_is_challenge/team6.jpg" },
+        ]}
+      />
 
       <section id="where-are-we" className="snap-start min-h-screen grid place-items-center px-6 bg-slate-300">
         <div className="max-w-4xl">
