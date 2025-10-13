@@ -1,4 +1,5 @@
 import QuestionConvergeSection from "@/components/sections/QuestionConvergeSection";
+import ParticipantsSection from "@/components/sections/ParticipantsSection";
 
 export default function Page() {
   return (
@@ -67,14 +68,7 @@ export default function Page() {
         </div>
       </section>
 
-      <section id="participants" className="snap-start min-h-screen grid place-items-center px-6 bg-slate-300">
-        <div className="max-w-4xl">
-          <h2 className="font-heading text-4xl md:text-5xl font-semibold">Participantes</h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            Grid con filtros y equipos
-          </p>
-        </div>
-      </section>
+      <ParticipantsSection />
     </main>
   );
 }
