@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import Image from "next/image";
 
@@ -105,6 +105,37 @@ export default function HeroSection({ id, title, description, image }: Props) {
     return () => ctx.revert();
   }, []);
 
+  const [particles, setParticles] = useState<
+    {
+      top: string;
+      left: string;
+      width: string;
+      height: string;
+      background: string;
+      boxShadow: string;
+      delay: string;
+      duration: string;
+    }[]
+  >([]);
+
+  useEffect(() => {
+    const generated = Array.from({ length: 17 }, () => {
+      const size = 10 + Math.random() * 8; // 6–14px
+      const opacity = 0.45 + Math.random() * 0.3;
+      return {
+        top: `${Math.random() * 100}%`,
+        left: `${Math.random() * 100}%`,
+        width: `${size}px`,
+        height: `${size}px`,
+        background: `rgba(255, 255, 255, ${opacity})`,
+        boxShadow: `0 0 ${4 + Math.random() * 8}px rgba(255, 255, 255, 0.3)`,
+        delay: `${Math.random() * 5}s`,
+        duration: `${12 + Math.random() * 8}s`,
+      };
+    });
+    setParticles(generated);
+  }, []);
+
   return (
     <section
       id={id}
@@ -129,27 +160,33 @@ export default function HeroSection({ id, title, description, image }: Props) {
       {/* Animated gradient */}
       <div
         ref={gradientRef}
-        className="absolute inset-0 z-20 hidden pointer-events-none md:block"
+        className="absolute h-[200%] inset-0 z-20 hidden pointer-events-none md:block"
         style={{
           background:
             "linear-gradient(270deg, #6366F1, #06B6D4, #6366F1, #06B6D4)",
-          backgroundSize: "400% 400%",
+          backgroundSize: "800% 800%",
+          top: "-50%",
           backgroundPosition: "0% 50%",
           opacity: 0.35,
           willChange: "transform, opacity, background-position",
         }}
       />
 
-      {/* 🌟 Floating particles (optional) */}
+      {/* 🌟 Floating particles (hydration-safe & enhanced) */}
       <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
-        {[...Array(8)].map((_, i) => (
+        {particles.map((p, i) => (
           <span
             key={i}
-            className="absolute w-3 h-3 bg-white/10 rounded-full animate-float"
+            className="absolute rounded-full animate-float"
             style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
+              top: p.top,
+              left: p.left,
+              width: p.width,
+              height: p.height,
+              background: p.background,
+              boxShadow: p.boxShadow,
+              animationDelay: p.delay,
+              animationDuration: p.duration,
             }}
           />
         ))}
