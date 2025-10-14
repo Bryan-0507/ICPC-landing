@@ -28,18 +28,18 @@ export default function QuestionConvergeSection({
   /**
    * How long the pinned scroll should be (in viewport heights).
    */
-  const scrollVh = 4
+  const scrollVh = 4;
 
   /**
    * Initial and final scale for the text block.
    */
-  const initialScale = 1.8
-  const finalScale = 0.7
+  const initialScale = 1.8;
+  const finalScale = 0.7;
 
   /**
    * Random spread radius for where cards start (in px). Default: 480
    */
-  const startSpreadPx = 480
+  const startSpreadPx = 480;
 
   const rootRef = useRef<HTMLDivElement | null>(null);
   const textWrapRef = useRef<HTMLDivElement | null>(null);
@@ -89,11 +89,23 @@ export default function QuestionConvergeSection({
       const is2XL = window.matchMedia("(min-width: 1536px)").matches;
 
       // Desired scales by breakpoint
-      const effFinalScale = isSM ? Math.max(finalScale, 0.85) : isMD ? Math.min(finalScale, 0.75) : finalScale;
-      const effScrollVh = isSM ? Math.min(scrollVh, 3.0) : isMD ? Math.min(scrollVh, 3.5) : scrollVh;
+      const effFinalScale = isSM
+        ? Math.max(finalScale, 0.85)
+        : isMD
+          ? Math.min(finalScale, 0.75)
+          : finalScale;
+      const effScrollVh = isSM
+        ? Math.min(scrollVh, 3.0)
+        : isMD
+          ? Math.min(scrollVh, 3.5)
+          : scrollVh;
 
-      const getVW = () => (window.visualViewport?.width ?? window.innerWidth ?? root.clientWidth);
-      const getVH = () => (window.visualViewport?.height ?? window.innerHeight ?? root.clientHeight);
+      const getVW = () =>
+        window.visualViewport?.width ?? window.innerWidth ?? root.clientWidth;
+      const getVH = () =>
+        window.visualViewport?.height ??
+        window.innerHeight ??
+        root.clientHeight;
 
       const updateCardsWrapSize = () => {
         const vw = getVW();
@@ -101,17 +113,27 @@ export default function QuestionConvergeSection({
         const vv = window.visualViewport;
         const left = vv?.offsetLeft ?? 0;
         const top = vv?.offsetTop ?? 0;
-        gsap.set(cardsWrap, { position: "fixed", left, top, width: vw, height: vh });
+        gsap.set(cardsWrap, {
+          position: "fixed",
+          left,
+          top,
+          width: vw,
+          height: vh,
+        });
       };
       let detachVV: null | (() => void) = null;
 
       const getRingRadius = () => {
         const base = Math.min(getVW(), getVH());
-        return base * (isSM ? 0.12 : isMD ? 0.15 : is2XL ? 0.22 : isXL ? 0.20 : 0.16);
+        return (
+          base * (isSM ? 0.12 : isMD ? 0.15 : is2XL ? 0.22 : isXL ? 0.2 : 0.16)
+        );
       };
 
       // Angles are stable across calls
-      const angles = cards.map((_, i) => (i / Math.max(1, cards.length)) * Math.PI * 2);
+      const angles = cards.map(
+        (_, i) => (i / Math.max(1, cards.length)) * Math.PI * 2,
+      );
 
       // Compute Y offset so the average of clamped Y targets sits at 0 (true vertical center)
       const computeYCenterOffset = (rr: number) => {
@@ -122,7 +144,7 @@ export default function QuestionConvergeSection({
           const el = cards[i];
           const halfH = Math.min(el.offsetHeight / 2, vh / 2 - margin - 1);
           const minY = -vh / 2 + halfH + margin;
-          const maxY =  vh / 2 - halfH - margin;
+          const maxY = vh / 2 - halfH - margin;
           const raw = Math.sin(angles[i]) * rr;
           const clamped = Math.max(minY, Math.min(maxY, raw));
           sum += clamped;
@@ -140,7 +162,7 @@ export default function QuestionConvergeSection({
           const el = cards[i];
           const halfW = Math.min(el.offsetWidth / 2, vw / 2 - margin - 1);
           const minX = -vw / 2 + halfW + margin;
-          const maxX =  vw / 2 - halfW - margin;
+          const maxX = vw / 2 - halfW - margin;
           const raw = Math.cos(angles[i]) * rr;
           const clamped = Math.max(minX, Math.min(maxX, raw));
           sum += clamped;
@@ -157,7 +179,12 @@ export default function QuestionConvergeSection({
         // Distribute Y uniformly by index (same every time)
         const bandTop = -h / 2 + 80;
         const bandBottom = h / 2 - 80;
-        const mapIdx = gsap.utils.mapRange(0, Math.max(1, cards.length - 1), bandTop, bandBottom);
+        const mapIdx = gsap.utils.mapRange(
+          0,
+          Math.max(1, cards.length - 1),
+          bandTop,
+          bandBottom,
+        );
 
         cards.forEach((card, i) => {
           const fromRight = i % 2 === 1;
@@ -214,7 +241,7 @@ export default function QuestionConvergeSection({
           },
           onEnter: () => {
             updateCardsWrapSize();
-          
+
             if (!detachVV && window.visualViewport) {
               const vv = window.visualViewport;
               const handler = () => updateCardsWrapSize();
@@ -240,16 +267,31 @@ export default function QuestionConvergeSection({
             }
           },
           onLeave: () => {
-            if (detachVV) { detachVV(); detachVV = null; }
-            gsap.set(cardsWrap, { clearProps: "position,width,height,left,top" });
+            if (detachVV) {
+              detachVV();
+              detachVV = null;
+            }
+            gsap.set(cardsWrap, {
+              clearProps: "position,width,height,left,top",
+            });
           },
           onLeaveBack: () => {
-            if (detachVV) { detachVV(); detachVV = null; }
-            gsap.set(cardsWrap, { clearProps: "position,width,height,left,top" });
+            if (detachVV) {
+              detachVV();
+              detachVV = null;
+            }
+            gsap.set(cardsWrap, {
+              clearProps: "position,width,height,left,top",
+            });
           },
           onKill: () => {
-            if (detachVV) { detachVV(); detachVV = null; }
-            gsap.set(cardsWrap, { clearProps: "position,width,height,left,top" });
+            if (detachVV) {
+              detachVV();
+              detachVV = null;
+            }
+            gsap.set(cardsWrap, {
+              clearProps: "position,width,height,left,top",
+            });
           },
         },
       });
@@ -270,7 +312,7 @@ export default function QuestionConvergeSection({
             const margin = isSM ? 10 : isMD ? 14 : 12;
             const halfW = Math.min(el.offsetWidth / 2, vw / 2 - margin - 1);
             const minX = -vw / 2 + halfW + margin;
-            const maxX =  vw / 2 - halfW - margin;
+            const maxX = vw / 2 - halfW - margin;
             return Math.max(minX, Math.min(maxX, raw));
           },
           y: (i: number, el: HTMLElement) => {
@@ -282,7 +324,7 @@ export default function QuestionConvergeSection({
             const margin = isSM ? 10 : isMD ? 14 : 12;
             const halfH = Math.min(el.offsetHeight / 2, vh / 2 - margin - 1);
             const minY = -vh / 2 + halfH + margin;
-            const maxY =  vh / 2 - halfH - margin;
+            const maxY = vh / 2 - halfH - margin;
             return Math.max(minY, Math.min(maxY, raw));
           },
           rotate: 0,
@@ -293,7 +335,7 @@ export default function QuestionConvergeSection({
           duration: 1,
           stagger: 0, // all together
         },
-        0
+        0,
       );
 
       // subtle float after converging
@@ -306,9 +348,8 @@ export default function QuestionConvergeSection({
           duration: 0.4,
           ease: "sine.inOut",
         },
-        ">-0.05"
+        ">-0.05",
       );
-
 
       tl.to(
         cards,
@@ -317,36 +358,49 @@ export default function QuestionConvergeSection({
           duration: 0.35,
           ease: "sine.out",
         },
-        ">" // after float
+        ">", // after float
       );
 
       // Center squeeze to close any remaining gap
-      const centerBias = isSM ? 0.82 : isMD ? 0.84 : is2XL ? 0.90 : isXL ? 0.88 : 0.86;
+      const centerBias = isSM
+        ? 0.82
+        : isMD
+          ? 0.84
+          : is2XL
+            ? 0.9
+            : isXL
+              ? 0.88
+              : 0.86;
       tl.to(
         cards,
         {
-          x: (_: number, el: HTMLElement) => (gsap.getProperty(el, "x") as number) * centerBias,
-          y: (_: number, el: HTMLElement) => (gsap.getProperty(el, "y") as number) * centerBias,
-          duration: 0.10,
+          x: (_: number, el: HTMLElement) =>
+            (gsap.getProperty(el, "x") as number) * centerBias,
+          y: (_: number, el: HTMLElement) =>
+            (gsap.getProperty(el, "y") as number) * centerBias,
+          duration: 0.1,
           ease: "power2.in",
         },
-        ">-0.05"
+        ">-0.05",
       );
 
-      const toward0 = (v: number, px: number) => (v > 0 ? Math.max(0, v - px) : Math.min(0, v + px));
+      const toward0 = (v: number, px: number) =>
+        v > 0 ? Math.max(0, v - px) : Math.min(0, v + px);
       const nudgeX = isSM ? 4 : isMD ? 6 : 8;
       const nudgeY = isSM ? 3 : isMD ? 4 : 6;
 
       tl.to(
         cards,
         {
-          x: (_: number, el: HTMLElement) => toward0(gsap.getProperty(el, "x") as number, nudgeX),
-          y: (_: number, el: HTMLElement) => toward0(gsap.getProperty(el, "y") as number, nudgeY),
+          x: (_: number, el: HTMLElement) =>
+            toward0(gsap.getProperty(el, "x") as number, nudgeX),
+          y: (_: number, el: HTMLElement) =>
+            toward0(gsap.getProperty(el, "y") as number, nudgeY),
           duration: 0.18,
           ease: "power1.out",
           stagger: 0,
         },
-        ">-0.02"
+        ">-0.02",
       );
 
       // Cleanup on unmount
@@ -395,7 +449,11 @@ export default function QuestionConvergeSection({
       </div>
 
       {/* Card images (absolute, converging toward center) */}
-      <div ref={cardsWrapRef} aria-hidden className="pointer-events-none absolute inset-0 grid place-items-center z-30 overflow-x-hidden">
+      <div
+        ref={cardsWrapRef}
+        aria-hidden
+        className="pointer-events-none absolute inset-0 grid place-items-center z-30 overflow-x-hidden"
+      >
         {images.map((img, i) => (
           <div
             key={i}
