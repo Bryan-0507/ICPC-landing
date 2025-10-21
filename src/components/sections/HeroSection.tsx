@@ -135,7 +135,7 @@ export default function HeroSection({ id, title, description, image }: Props) {
   useEffect(() => {
     const generated = Array.from({ length: 27 }, () => {
       const char = Math.random() > 0.5 ? "1" : "0";
-      const fontSize = 20 + Math.random() * 8;
+      const fontSize = 16 + Math.random() * 4;
       const opacity = 0.85 + Math.random() * 0.15;
       return {
         char,
@@ -245,10 +245,10 @@ export default function HeroSection({ id, title, description, image }: Props) {
             opacity: 0;
           }
           10% {
-            opacity: var(--char-opacity, 0.3);
+            opacity: var(--char-opacity, 0.5);
           }
           90% {
-            opacity: var(--char-opacity, 0.3);
+            opacity: var(--char-opacity, 0.5);
           }
           100% {
             transform: translateY(calc(100vh + 50px));
@@ -285,7 +285,7 @@ export default function HeroSection({ id, title, description, image }: Props) {
           top: 0;
           left: 0;
           bottom: 0;
-          width: 7px;
+          width: 12px;
           background: linear-gradient(
             to right,
             transparent,
