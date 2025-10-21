@@ -135,7 +135,7 @@ export default function HeroSection({ id, title, description, image }: Props) {
   useEffect(() => {
     const generated = Array.from({ length: 27 }, () => {
       const char = Math.random() > 0.5 ? "1" : "0";
-      const fontSize = 24 + Math.random() * 8;
+      const fontSize = 20 + Math.random() * 8;
       const opacity = 0.85 + Math.random() * 0.15;
       return {
         char,
@@ -206,10 +206,10 @@ export default function HeroSection({ id, title, description, image }: Props) {
 
       {/* Text content */}
       <div className="relative z-30 max-w-4xl text-center hero-content">
-        <h2 className="hero-title font-heading text-4xl md:text-8xl font-bold text-gray-100 leading-tight tracking-tight">
+        <h2 className="hero-title font-heading text-4xl md:text-[17.942rem] font-bold text-gray-100 leading-tight tracking-tight">
           {title}
         </h2>
-        <p className="hero-desc mx-auto mt-6 max-w-2xl text-base text-gray-300 md:text-lg">
+        <p className="hero-desc mx-auto max-w-2xl text-base text-gray-300 md:text-xl font-semibold">
           {description}
         </p>
       </div>
