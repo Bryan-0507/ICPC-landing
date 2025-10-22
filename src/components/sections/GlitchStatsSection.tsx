@@ -24,9 +24,11 @@ export default function GlitchStatsSection({
   const mousePos = useRef({ x: 0, y: 0 });
   const currentPos = useRef({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   // Detect mobile
   useEffect(() => {
+    setIsMounted(true);
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -34,6 +36,8 @@ export default function GlitchStatsSection({
   }, []);
 
   useEffect(() => {
+    if (!isMounted) return;
+
     const ctx = gsap.context(() => {
       const prefersReducedMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -126,9 +130,9 @@ export default function GlitchStatsSection({
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isMounted]);
 
-  // Fragmented squares data
+  // Fragmented squares data - only generate on client
   const [squares, setSquares] = useState<
     {
       x: number;
@@ -140,6 +144,8 @@ export default function GlitchStatsSection({
   >([]);
 
   useEffect(() => {
+    if (!isMounted) return;
+
     const squareSize = isMobile ? 20 : 55;
     const cols = Math.ceil(window.innerWidth / squareSize);
     const rows = Math.ceil(window.innerHeight / squareSize);
@@ -157,7 +163,7 @@ export default function GlitchStatsSection({
       }
     }
     setSquares(generated);
-  }, [isMobile]);
+  }, [isMobile, isMounted]);
 
   return (
     <section
@@ -189,44 +195,48 @@ export default function GlitchStatsSection({
         }}
       />
 
-      {/* Fragmented squares pattern */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        {squares.map((square, i) =>
-          !square.missing ? (
-            <div
-              key={i}
-              className="absolute border animate-square-glitch"
-              style={{
-                left: square.x,
-                top: square.y,
-                width: square.size,
-                height: square.size,
-                borderColor: `rgba(132, 89, 172, ${square.opacity})`,
-                borderWidth: "1px",
-                animationDelay: `${Math.random() * 3}s`,
-              }}
-            />
-          ) : null,
-        )}
-      </div>
+      {/* Fragmented squares pattern - only render on client */}
+      {isMounted && (
+        <div className="absolute inset-0 z-10 pointer-events-none">
+          {squares.map((square, i) =>
+            !square.missing ? (
+              <div
+                key={i}
+                className="absolute border animate-square-glitch"
+                style={{
+                  left: square.x,
+                  top: square.y,
+                  width: square.size,
+                  height: square.size,
+                  borderColor: `rgba(132, 89, 172, ${square.opacity})`,
+                  borderWidth: "1px",
+                  animationDelay: `${Math.random() * 3}s`,
+                }}
+              />
+            ) : null,
+          )}
+        </div>
+      )}
 
       {/* Digital static overlay */}
       <div className="absolute inset-0 z-15 pointer-events-none digital-static" />
 
-      {/* White flash pixels */}
-      <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden">
-        {[...Array(isMobile ? 15 : 25)].map((_, i) => (
-          <div
-            key={i}
-            className="flash-pixel"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 3}s`,
-            }}
-          />
-        ))}
-      </div>
+      {/* White flash pixels - only render on client */}
+      {isMounted && (
+        <div className="absolute inset-0 z-15 pointer-events-none overflow-hidden">
+          {[...Array(isMobile ? 15 : 25)].map((_, i) => (
+            <div
+              key={i}
+              className="flash-pixel"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 3}s`,
+              }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Text content with glitch effects */}
       <div className="relative z-30 max-w-4xl text-center glitch-content">
