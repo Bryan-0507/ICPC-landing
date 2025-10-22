@@ -1,6 +1,7 @@
 import QuestionConvergeSection from "@/components/sections/QuestionConvergeSection";
 import HeroSection from "@/components/sections/HeroSection";
 import TerminalStatsSection from "@/components/sections/TerminalStatsSection";
+import GlitchStatsSection from "@/components/sections/GlitchStatsSection";
 import ModernStatsSection from "@/components/sections/ModernStatsSection";
 import ParticipantsSection from "@/components/sections/ParticipantsSection";
 
@@ -39,6 +40,13 @@ export default function Page() {
         id="3_000"
         title="3,000"
         description="universidades en 11 paises"
+        image="/images/glocal_icpc_statistics/50_000_students.png"
+      />
+
+      <GlitchStatsSection
+        id="400"
+        title="+400"
+        description="competiciones locales"
         image="/images/glocal_icpc_statistics/50_000_students.png"
       />
 
