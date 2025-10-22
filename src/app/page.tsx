@@ -1,6 +1,7 @@
 import QuestionConvergeSection from "@/components/sections/QuestionConvergeSection";
 import HeroSection from "@/components/sections/HeroSection";
 import ParticipantsSection from "@/components/sections/ParticipantsSection";
+import WhereWeAreSection from "@/components/sections/WhereWeAreSection";
 
 export default function Page() {
   return (
@@ -54,19 +55,8 @@ export default function Page() {
         ]}
       />
 
-      <section
-        id="where-are-we"
-        className="snap-start min-h-screen grid place-items-center px-6 bg-slate-300"
-      >
-        <div className="max-w-4xl">
-          <h2 className="font-heading text-4xl md:text-5xl font-semibold">
-            ¿Dónde estamos?
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            ver como ponemos la data
-          </p>
-        </div>
-      </section>
+      {/* Sección de Dónde Estamos */}
+      <WhereWeAreSection />
 
       <section
         id="next-objective"
