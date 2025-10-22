@@ -40,14 +40,14 @@ export default function Page() {
         id="3_000"
         title="3,000"
         description="universidades en 11 paises"
-        image="/images/glocal_icpc_statistics/50_000_students.png"
+        image="/images/glocal_icpc_statistics/300_universities.png"
       />
 
       <GlitchStatsSection
         id="400"
         title="+400"
         description="competiciones locales"
-        image="/images/glocal_icpc_statistics/50_000_students.png"
+        image="/images/glocal_icpc_statistics/400_competitions.png"
       />
 
       {/* Segunda converge section, cual es el desafio */}
