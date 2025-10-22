@@ -11,7 +11,7 @@ type Props = {
   image: string;
 };
 
-export default function HeroSection({ id, title, description, image }: Props) {
+export default function HeroBack({ id, title, description, image }: Props) {
   const containerRef = useRef<HTMLElement>(null);
   const gradientRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
@@ -67,11 +67,10 @@ export default function HeroSection({ id, title, description, image }: Props) {
       });
 
       // =====================
-      // 🌀 Multi-layer parallax (title + description)
+      // 🌀 Smooth parallax on title only
       // =====================
       if (!prefersReducedMotion) {
         const titleEl = hero.querySelector(".hero-title");
-        const descEl = hero.querySelector(".hero-desc");
 
         const handleMouseMove = (e: MouseEvent) => {
           const rect = hero.getBoundingClientRect();
@@ -81,23 +80,18 @@ export default function HeroSection({ id, title, description, image }: Props) {
           };
         };
 
-        // Smooth animation loop with lerp
+        // Smooth animation loop with lerp (linear interpolation)
         const animate = () => {
-          // Lerp for smooth easing (0.21 = balanced responsiveness)
+          // Lerp for smooth easing (0.1 = smoothness factor)
           currentPos.current.x +=
             (mousePos.current.x - currentPos.current.x) * 0.21;
           currentPos.current.y +=
             (mousePos.current.y - currentPos.current.y) * 0.21;
 
-          // Apply layered transforms for depth
+          // Apply transform only to title
           if (titleEl) {
             (titleEl as HTMLElement).style.transform =
               `translate(${currentPos.current.x * 30}px, ${currentPos.current.y * 30}px)`;
-          }
-
-          if (descEl) {
-            (descEl as HTMLElement).style.transform =
-              `translate(${currentPos.current.x * 15}px, ${currentPos.current.y * 15}px)`;
           }
 
           rafRef.current = requestAnimationFrame(animate);
@@ -118,35 +112,35 @@ export default function HeroSection({ id, title, description, image }: Props) {
     return () => ctx.revert();
   }, []);
 
-  // =====================
-  // 💾 Binary rain particles
-  // =====================
-  const [binaryChars, setBinaryChars] = useState<
+  const [particles, setParticles] = useState<
     {
-      char: string;
+      top: string;
       left: string;
-      fontSize: string;
-      opacity: number;
+      width: string;
+      height: string;
+      background: string;
+      boxShadow: string;
       delay: string;
       duration: string;
     }[]
   >([]);
 
   useEffect(() => {
-    const generated = Array.from({ length: 27 }, () => {
-      const char = Math.random() > 0.5 ? "1" : "0";
-      const fontSize = 16 + Math.random() * 4;
-      const opacity = 0.85 + Math.random() * 0.15;
+    const generated = Array.from({ length: 17 }, () => {
+      const size = 10 + Math.random() * 8;
+      const opacity = 0.45 + Math.random() * 0.3;
       return {
-        char,
+        top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
-        fontSize: `${fontSize}px`,
-        opacity,
-        delay: `${Math.random() * 8}s`,
-        duration: `${8 + Math.random() * 6}s`, // 8-14s fall time
+        width: `${size}px`,
+        height: `${size}px`,
+        background: `rgba(255, 255, 255, ${opacity})`,
+        boxShadow: `0 0 ${4 + Math.random() * 8}px rgba(255, 255, 255, 0.3)`,
+        delay: `${Math.random() * 5}s`,
+        duration: `${12 + Math.random() * 8}s`,
       };
     });
-    setBinaryChars(generated);
+    setParticles(generated);
   }, []);
 
   return (
@@ -169,54 +163,60 @@ export default function HeroSection({ id, title, description, image }: Props) {
       {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/20 to-black/90 mix-blend-multiply" />
 
-      {/* Animated gradient */}
+      {/* Animated gradient - NOW OPTIMIZED */}
       <div
         ref={gradientRef}
         className="absolute inset-0 z-20 pointer-events-none gradient-shimmer"
         style={{
           opacity: 0.55,
-          willChange: "opacity",
+          willChange: "transform, opacity",
         }}
       />
 
-      {/* 💾 Binary code rain */}
+      {/* 🌟 Floating particles */}
       <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
-        {binaryChars.map((char, i) => (
+        {particles.map((p, i) => (
           <span
             key={i}
-            className="absolute font-mono text-cyan-400 animate-binary-fall"
+            className="absolute rounded-full animate-float"
             style={{
-              left: char.left,
-              top: "-50px",
-              fontSize: char.fontSize,
-              opacity: char.opacity,
-              animationDelay: char.delay,
-              animationDuration: char.duration,
+              top: p.top,
+              left: p.left,
+              width: p.width,
+              height: p.height,
+              background: p.background,
+              boxShadow: p.boxShadow,
+              animationDelay: p.delay,
+              animationDuration: p.duration,
             }}
-          >
-            {char.char}
-          </span>
+          />
         ))}
-      </div>
-
-      {/* 📺 Terminal scanline effect */}
-      <div className="absolute inset-0 z-30 overflow-hidden pointer-events-none">
-        <div className="scanline" />
       </div>
 
       {/* Text content */}
       <div className="relative z-30 max-w-4xl text-center hero-content">
-        <h2 className="hero-title font-heading text-4xl md:text-[17.942rem] font-bold text-gray-100 leading-tight tracking-tight">
+        <h2 className="hero-title font-heading text-4xl md:text-8xl font-bold text-gray-100 leading-tight tracking-tight">
           {title}
         </h2>
-        <p className="hero-desc mx-auto max-w-2xl text-base text-gray-300 md:text-xl font-semibold">
+        <p className="hero-desc mx-auto mt-6 max-w-2xl text-base text-gray-300 md:text-lg">
           {description}
         </p>
       </div>
 
       {/* CSS animations */}
       <style jsx global>{`
-        /* Gradient shimmer */
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0);
+            opacity: 0.4;
+          }
+          50% {
+            transform: translateY(-20px);
+            opacity: 0.8;
+          }
+        }
+
         @keyframes gradient-slide {
           0% {
             background-position: 0% 50%;
@@ -224,6 +224,10 @@ export default function HeroSection({ id, title, description, image }: Props) {
           100% {
             background-position: 200% 50%;
           }
+        }
+
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
         }
 
         .gradient-shimmer {
@@ -236,75 +240,6 @@ export default function HeroSection({ id, title, description, image }: Props) {
           );
           background-size: 200% 100%;
           animation: gradient-slide 25s linear infinite;
-        }
-
-        /* Binary rain fall */
-        @keyframes binary-fall {
-          0% {
-            transform: translateY(-50px);
-            opacity: 0;
-          }
-          10% {
-            opacity: var(--char-opacity, 0.5);
-          }
-          90% {
-            opacity: var(--char-opacity, 0.5);
-          }
-          100% {
-            transform: translateY(calc(100vh + 50px));
-            opacity: 0;
-          }
-        }
-
-        .animate-binary-fall {
-          animation: binary-fall 10s linear infinite;
-          text-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
-          will-change: transform;
-        }
-
-        /* Terminal scanline - VERTICAL (right to left) */
-        @keyframes scanline-sweep {
-          0% {
-            transform: translateX(100vw);
-            opacity: 0;
-          }
-          5% {
-            opacity: 0.7;
-          }
-          95% {
-            opacity: 0.7;
-          }
-          100% {
-            transform: translateX(calc(-100vw - 2px));
-            opacity: 0;
-          }
-        }
-
-        .scanline {
-          position: absolute;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          width: 12px;
-          background: linear-gradient(
-            to right,
-            transparent,
-            rgba(6, 182, 212, 0.8),
-            transparent
-          );
-          box-shadow: 0 0 10px rgba(6, 182, 212, 0.6);
-          animation: scanline-sweep 12s ease-in-out infinite;
-          animation-delay: 2s;
-          will-change: transform;
-        }
-
-        /* Reduced motion support */
-        @media (prefers-reduced-motion: reduce) {
-          .animate-binary-fall,
-          .scanline,
-          .gradient-shimmer {
-            animation: none;
-          }
         }
       `}</style>
     </section>
