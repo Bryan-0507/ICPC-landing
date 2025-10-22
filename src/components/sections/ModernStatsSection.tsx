@@ -310,8 +310,8 @@ export default function ModernStatsSection({
         priority
       />
 
-      {/* Overlay with purple tones */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#52357B]/80 via-[#5459AC]/30 to-[#52357B]/90 mix-blend-multiply" />
+      {/* Overlay with purple/magenta tones */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#52357B]/85 via-[#3d2a5c]/50 to-[#2d1a4a]/95 mix-blend-multiply" />
 
       {/* Animated gradient */}
       <div
@@ -345,21 +345,21 @@ export default function ModernStatsSection({
             <polygon
               points="0,0 60,0 30,52"
               fill="none"
-              stroke="#648DB3"
+              stroke="#d946ef"
               strokeWidth="1.5"
               opacity="0.6"
             />
             <polygon
               points="60,0 90,52 30,52"
               fill="none"
-              stroke="#5459AC"
+              stroke="#06b6d4"
               strokeWidth="1.5"
               opacity="0.4"
             />
             <polygon
               points="60,0 120,0 90,52"
               fill="none"
-              stroke="#648DB3"
+              stroke="#d946ef"
               strokeWidth="1.5"
               opacity="0.5"
             />
@@ -367,28 +367,28 @@ export default function ModernStatsSection({
             <polygon
               points="0,52 30,52 0,104"
               fill="none"
-              stroke="#5459AC"
+              stroke="#06b6d4"
               strokeWidth="1.5"
               opacity="0.5"
             />
             <polygon
               points="30,52 90,52 60,104"
               fill="none"
-              stroke="#648DB3"
+              stroke="#d946ef"
               strokeWidth="1.5"
               opacity="0.6"
             />
             <polygon
               points="90,52 120,104 60,104"
               fill="none"
-              stroke="#5459AC"
+              stroke="#06b6d4"
               strokeWidth="1.5"
               opacity="0.4"
             />
             <polygon
               points="90,52 120,52 120,104"
               fill="none"
-              stroke="#648DB3"
+              stroke="#d946ef"
               strokeWidth="1.5"
               opacity="0.5"
             />
@@ -396,14 +396,14 @@ export default function ModernStatsSection({
             <polygon
               points="0,52 30,52 0,104"
               fill="none"
-              stroke="#648DB3"
+              stroke="#d946ef"
               strokeWidth="1.5"
               opacity="0.3"
             />
             <polygon
               points="30,52 60,104 0,104"
               fill="none"
-              stroke="#5459AC"
+              stroke="#06b6d4"
               strokeWidth="1.5"
               opacity="0.4"
             />
@@ -417,13 +417,13 @@ export default function ModernStatsSection({
         {activeNodes.map((node, i) => (
           <div
             key={`node-${i}`}
-            className="absolute rounded-full bg-[#648DB3] animate-node-pulse"
+            className="absolute rounded-full bg-[#d946ef] animate-node-pulse"
             style={{
               left: `${node.x}%`,
               top: `${node.y}%`,
               width: "6px",
               height: "6px",
-              boxShadow: "0 0 10px rgba(100, 141, 179, 0.8)",
+              boxShadow: "0 0 10px rgba(217, 70, 239, 0.8)",
               transform: "translate(-50%, -50%)",
             }}
           />
@@ -450,7 +450,7 @@ export default function ModernStatsSection({
                   y1={`${node1.y}%`}
                   x2={`${node2.x}%`}
                   y2={`${node2.y}%`}
-                  stroke="#648DB3"
+                  stroke="#d946ef"
                   strokeWidth="1"
                   opacity="0.5"
                 />
@@ -472,17 +472,17 @@ export default function ModernStatsSection({
             <linearGradient id="pathGradient" x1="0%" y1="0%" x2="100%" y2="0%">
               <stop
                 offset="0%"
-                stopColor="#648DB3"
+                stopColor="#d946ef"
                 stopOpacity={PREDICTED_PATH_OPACITY}
               />
               <stop
                 offset="50%"
-                stopColor="#648DB3"
+                stopColor="#06b6d4"
                 stopOpacity={PREDICTED_PATH_OPACITY}
               />
               <stop
                 offset="100%"
-                stopColor="#648DB3"
+                stopColor="#d946ef"
                 stopOpacity={PREDICTED_PATH_OPACITY}
               />
             </linearGradient>
@@ -517,13 +517,13 @@ export default function ModernStatsSection({
           return (
             <div
               key={packet.id}
-              className="absolute rounded-full bg-[#648DB3]"
+              className="absolute rounded-full bg-[#06b6d4]"
               style={{
                 left: `${pos.x}%`,
                 top: `${pos.y}%`,
                 width: `${packet.size}px`,
                 height: `${packet.size}px`,
-                boxShadow: `0 0 ${packet.size * 3}px rgba(100, 141, 179, 0.9)`,
+                boxShadow: `0 0 ${packet.size * 3}px rgba(6, 182, 212, 0.9)`,
                 transform: "translate(-50%, -50%)",
                 opacity: opacity,
                 willChange: "transform, opacity",
@@ -545,7 +545,7 @@ export default function ModernStatsSection({
 
       {/* CSS animations */}
       <style jsx global>{`
-        /* Gradient shimmer with palette colors */
+        /* Gradient shimmer with purple/magenta/cyan */
         @keyframes gradient-slide-modern {
           0% {
             background-position: 0% 50%;
@@ -558,10 +558,10 @@ export default function ModernStatsSection({
         .gradient-shimmer-modern {
           background: linear-gradient(
             270deg,
-            #5459ac,
-            #648db3,
-            #5459ac,
-            #648db3
+            #52357b,
+            #d946ef,
+            #06b6d4,
+            #52357b
           );
           background-size: 200% 100%;
           animation: gradient-slide-modern 20s linear infinite;

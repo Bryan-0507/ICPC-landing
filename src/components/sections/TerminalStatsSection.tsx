@@ -187,10 +187,10 @@ export default function TerminalStatsSection({
         priority
       />
 
-      {/* Overlay with darker, desaturated tones - stronger contrast */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#52357B]/90 via-[#1a1a2e]/60 to-[#0a0a15]/98 mix-blend-multiply" />
+      {/* Overlay with purple/magenta tones */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#52357B]/90 via-[#3d2a5c]/60 to-[#2d1a4a]/98 mix-blend-multiply" />
 
-      {/* Animated gradient - stronger glow */}
+      {/* Animated gradient - purple/magenta/cyan */}
       <div
         ref={gradientRef}
         className="absolute inset-0 z-20 pointer-events-none gradient-terminal"
@@ -203,19 +203,19 @@ export default function TerminalStatsSection({
       {/* Scan grid pattern (horizontal and vertical lines) */}
       <div className="absolute inset-0 z-10 pointer-events-none scan-grid" />
 
-      {/* ASCII-style floating characters - MORE VISIBLE */}
+      {/* ASCII-style floating characters - magenta/cyan themed */}
       <div className="absolute inset-0 z-12 overflow-hidden pointer-events-none">
         {scanChars.map((char, i) => (
           <span
             key={i}
-            className="absolute font-mono text-[#7BA5C8] animate-char-flicker"
+            className="absolute font-mono text-[#d946ef] animate-char-flicker"
             style={{
               left: char.left,
               top: char.top,
               fontSize: isMobile ? "18px" : "22px",
               animationDelay: char.delay,
               textShadow:
-                "0 0 12px rgba(123, 165, 200, 0.9), 0 0 24px rgba(100, 141, 179, 0.5)",
+                "0 0 12px rgba(217, 70, 239, 0.9), 0 0 24px rgba(6, 182, 212, 0.5)",
               fontWeight: "bold",
             }}
           >
@@ -230,7 +230,7 @@ export default function TerminalStatsSection({
           <h2 className="terminal-title font-heading text-4xl md:text-[17.942rem] font-bold leading-tight tracking-tight text-gray-100">
             {title}
           </h2>
-          {/* Blinking cursor - REDUCED glow */}
+          {/* Blinking cursor - cyan accent */}
           {showCursor && (
             <span
               className="absolute"
@@ -238,9 +238,9 @@ export default function TerminalStatsSection({
                 right: "-0.5em",
                 top: "50%",
                 transform: "translateY(-50%)",
-                color: "#8AC4E0",
+                color: "#06b6d4",
                 fontSize: "inherit",
-                textShadow: "0 0 10px rgba(138, 196, 224, 0.8)",
+                textShadow: "0 0 10px rgba(6, 182, 212, 0.8)",
               }}
             >
               _
@@ -254,7 +254,7 @@ export default function TerminalStatsSection({
 
       {/* CSS animations */}
       <style jsx global>{`
-        /* Terminal gradient */
+        /* Terminal gradient - purple/magenta/cyan */
         @keyframes gradient-terminal {
           0% {
             background-position: 0% 50%;
@@ -267,31 +267,31 @@ export default function TerminalStatsSection({
         .gradient-terminal {
           background: linear-gradient(
             270deg,
-            #648db3,
-            #5459ac,
-            #648db3,
-            #5459ac
+            #52357b,
+            #d946ef,
+            #06b6d4,
+            #52357b
           );
           background-size: 200% 100%;
           animation: gradient-terminal 30s linear infinite;
         }
 
-        /* Scan grid pattern - MORE VISIBLE */
+        /* Scan grid pattern - magenta/cyan */
         .scan-grid {
           background-image:
             repeating-linear-gradient(
               0deg,
-              rgba(123, 165, 200, ${SCAN_GRID_OPACITY}) 0px,
+              rgba(217, 70, 239, ${SCAN_GRID_OPACITY}) 0px,
               transparent 1px,
               transparent 2px,
-              rgba(123, 165, 200, ${SCAN_GRID_OPACITY}) 3px
+              rgba(217, 70, 239, ${SCAN_GRID_OPACITY}) 3px
             ),
             repeating-linear-gradient(
               90deg,
-              rgba(123, 165, 200, ${SCAN_GRID_OPACITY}) 0px,
+              rgba(6, 182, 212, ${SCAN_GRID_OPACITY}) 0px,
               transparent 1px,
               transparent 2px,
-              rgba(123, 165, 200, ${SCAN_GRID_OPACITY}) 3px
+              rgba(6, 182, 212, ${SCAN_GRID_OPACITY}) 3px
             );
         }
 
