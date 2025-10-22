@@ -199,17 +199,16 @@ export default function HeroSection({ id, title, description, image }: Props) {
         ))}
       </div>
 
-      {/* 📺 Terminal scanline effect */}
       <div className="absolute inset-0 z-30 overflow-hidden pointer-events-none">
         <div className="scanline" />
       </div>
 
       {/* Text content */}
       <div className="relative z-30 max-w-4xl text-center hero-content">
-        <h2 className="hero-title font-heading text-4xl md:text-[17.942rem] font-bold text-gray-100 leading-tight tracking-tight">
+        <h2 className="hero-title font-heading text-8xl md:text-[10.942rem] lg:text-[17.942rem] font-bold text-gray-100 leading-tight tracking-tight">
           {title}
         </h2>
-        <p className="hero-desc mx-auto max-w-2xl text-base text-gray-300 md:text-xl font-semibold">
+        <p className="hero-desc mx-auto max-w-3xl text-gray-300 text-base md:text-lg lg:text-xl font-bold">
           {description}
         </p>
       </div>

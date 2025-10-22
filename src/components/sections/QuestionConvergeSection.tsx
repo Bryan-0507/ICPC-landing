@@ -68,7 +68,6 @@ export default function QuestionConvergeSection({
       const root = rootRef.current!;
       const textWrap = textWrapRef.current!;
       const cards = cardRefs.current;
-      const cardsWrap = cardsWrapRef.current!;
 
       // helper: measure rect ignoring current GSAP scale
       const measureUnscaled = (el: HTMLElement) => {
@@ -100,28 +99,11 @@ export default function QuestionConvergeSection({
           ? Math.min(scrollVh, 3.5)
           : scrollVh;
 
-      const getVW = () =>
-        window.visualViewport?.width ?? window.innerWidth ?? root.clientWidth;
-      const getVH = () =>
-        window.visualViewport?.height ??
-        window.innerHeight ??
-        root.clientHeight;
+      const getRect = () => root.getBoundingClientRect();
+      const getVW = () => getRect().width;
+      const getVH = () => getRect().height;
 
-      const updateCardsWrapSize = () => {
-        const vw = getVW();
-        const vh = getVH();
-        const vv = window.visualViewport;
-        const left = vv?.offsetLeft ?? 0;
-        const top = vv?.offsetTop ?? 0;
-        gsap.set(cardsWrap, {
-          position: "fixed",
-          left,
-          top,
-          width: vw,
-          height: vh,
-        });
-      };
-      let detachVV: null | (() => void) = null;
+
 
       const getRingRadius = () => {
         const base = Math.min(getVW(), getVH());
@@ -217,7 +199,7 @@ export default function QuestionConvergeSection({
       // Initial placement before the timeline runs
       placeCardsAtEdges();
 
-      const scrollLenPx = () => Math.max(window.innerHeight * effScrollVh, 600);
+      const scrollLenPx = () => Math.max(getVH() * effScrollVh, 600);
 
       const tl = gsap.timeline({
         defaults: { ease: "none" },
@@ -227,6 +209,7 @@ export default function QuestionConvergeSection({
           end: () => "+=" + scrollLenPx(),
           scrub: true,
           pin: true,
+          pinType: "fixed",
           anticipatePin: 1,
           pinSpacing: true,
           invalidateOnRefresh: true,
@@ -236,62 +219,7 @@ export default function QuestionConvergeSection({
           },
           onRefresh: () => {
             baseTextRect = measureUnscaled(textWrap);
-            updateCardsWrapSize();
             placeCardsAtEdges();
-          },
-          onEnter: () => {
-            updateCardsWrapSize();
-
-            if (!detachVV && window.visualViewport) {
-              const vv = window.visualViewport;
-              const handler = () => updateCardsWrapSize();
-              vv.addEventListener("resize", handler);
-              vv.addEventListener("scroll", handler);
-              detachVV = () => {
-                vv.removeEventListener("resize", handler);
-                vv.removeEventListener("scroll", handler);
-              };
-            }
-          },
-          onEnterBack: () => {
-            updateCardsWrapSize();
-            if (!detachVV && window.visualViewport) {
-              const vv = window.visualViewport;
-              const handler = () => updateCardsWrapSize();
-              vv.addEventListener("resize", handler);
-              vv.addEventListener("scroll", handler);
-              detachVV = () => {
-                vv.removeEventListener("resize", handler);
-                vv.removeEventListener("scroll", handler);
-              };
-            }
-          },
-          onLeave: () => {
-            if (detachVV) {
-              detachVV();
-              detachVV = null;
-            }
-            gsap.set(cardsWrap, {
-              clearProps: "position,width,height,left,top",
-            });
-          },
-          onLeaveBack: () => {
-            if (detachVV) {
-              detachVV();
-              detachVV = null;
-            }
-            gsap.set(cardsWrap, {
-              clearProps: "position,width,height,left,top",
-            });
-          },
-          onKill: () => {
-            if (detachVV) {
-              detachVV();
-              detachVV = null;
-            }
-            gsap.set(cardsWrap, {
-              clearProps: "position,width,height,left,top",
-            });
           },
         },
       });
@@ -418,7 +346,7 @@ export default function QuestionConvergeSection({
     <section
       id={id}
       ref={rootRef}
-      className={`relative isolate flex items-center justify-center min-h-[100svh] w-full max-w-full overflow-x-hidden bg-background bg-grid-pattern overflow-hidden contain-layout contain-paint ${className ?? ""}`}
+      className={`relative isolate flex items-center justify-center min-h-[100svh] w-full max-w-full overflow-x-hidden bg-background bg-grid-pattern overflow-hidden ${className ?? ""}`}
     >
       {/* Centered content wrapper (scaled by GSAP) */}
       <div
