@@ -178,6 +178,16 @@ export default function ModernStatsSection({
   const [packets, setPackets] = useState<Packet[]>([]);
 
   useEffect(() => {
+    setPackets((prev) =>
+      prev.map((p) => ({
+        ...p,
+        fromNode: p.fromNode % activeNodes.length,
+        toNode: p.toNode % activeNodes.length,
+      })),
+    );
+  }, [activeNodes.length]);
+
+  useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -240,10 +250,17 @@ export default function ModernStatsSection({
     };
   }, [isMobile]);
 
+  const isValidPacket = (p: Packet) =>
+    Boolean(activeNodes[p.fromNode] && activeNodes[p.toNode]);
+
   // Calculate packet position with curved path (quadratic bezier)
-  const getPacketPosition = (packet: Packet) => {
-    const from = activeNodes[packet.fromNode];
-    const to = activeNodes[packet.toNode];
+  const getPacketPosition = (
+    packet: Packet,
+  ): { x: number; y: number; controlX: number; controlY: number } | null => {
+    if (!isValidPacket(packet)) return null;
+
+    const from = activeNodes[packet.fromNode]!;
+    const to = activeNodes[packet.toNode]!;
     const t = packet.progress;
 
     // Control point for curve (perpendicular offset)
@@ -270,8 +287,10 @@ export default function ModernStatsSection({
 
   // Generate SVG path for packet route
   const getPacketPath = (packet: Packet) => {
-    const from = activeNodes[packet.fromNode];
-    const to = activeNodes[packet.toNode];
+    if (!isValidPacket(packet)) return "";
+
+    const from = activeNodes[packet.fromNode]!;
+    const to = activeNodes[packet.toNode]!;
 
     // Control point for curve
     const midX = (from.x + to.x) / 2;
@@ -329,7 +348,7 @@ export default function ModernStatsSection({
         style={{ opacity: TRIANGLE_TESSELLATION_OPACITY }}
         width="100%"
         height="100%"
-        viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+        viewBox={`0 0 ${Math.max(1, dimensions.width)} ${Math.max(1, dimensions.height)}`}
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
@@ -487,19 +506,22 @@ export default function ModernStatsSection({
               />
             </linearGradient>
           </defs>
-          {packets.map((packet) => (
-            <path
-              key={`path-${packet.id}`}
-              d={getPacketPath(packet)}
-              fill="none"
-              stroke="url(#pathGradient)"
-              strokeWidth={isMobile ? "2" : "1.5"}
-              style={{
-                filter: `blur(${GLOW}px)`,
-                willChange: "opacity",
-              }}
-            />
-          ))}
+          {packets.map((packet) => {
+            if (!isValidPacket(packet)) return null;
+            return (
+              <path
+                key={`path-${packet.id}`}
+                d={getPacketPath(packet)}
+                fill="none"
+                stroke="url(#pathGradient)"
+                strokeWidth={isMobile ? "2" : "1.5"}
+                style={{
+                  filter: `blur(${GLOW}px)`,
+                  willChange: "opacity",
+                }}
+              />
+            );
+          })}
         </svg>
       )}
 
@@ -507,6 +529,8 @@ export default function ModernStatsSection({
       <div className="absolute inset-0 z-16 pointer-events-none">
         {packets.map((packet) => {
           const pos = getPacketPosition(packet);
+          if (!pos) return null;
+
           const opacity =
             packet.progress < 0.1
               ? packet.progress * 10
