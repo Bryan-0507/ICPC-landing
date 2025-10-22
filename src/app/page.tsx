@@ -1,5 +1,8 @@
 import QuestionConvergeSection from "@/components/sections/QuestionConvergeSection";
 import HeroSection from "@/components/sections/HeroSection";
+import TerminalStatsSection from "@/components/sections/TerminalStatsSection";
+import GlitchStatsSection from "@/components/sections/GlitchStatsSection";
+import ModernStatsSection from "@/components/sections/ModernStatsSection";
 import ParticipantsSection from "@/components/sections/ParticipantsSection";
 import WhereWeAreSection from "@/components/sections/WhereWeAreSection";
 
@@ -27,19 +30,26 @@ export default function Page() {
         ]}
       />
 
-      <section
-        id="statistics"
-        className="snap-start min-h-screen grid place-items-center px-6 bg-slate-300"
-      >
-        <div className="max-w-4xl">
-          <h2 className="font-heading text-4xl md:text-5xl font-semibold">
-            DATA ESTADISTICA
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            AQUI PONDREMOS LOS DATOS
-          </p>
-        </div>
-      </section>
+      <ModernStatsSection
+        id="50_000"
+        title="50,000"
+        description="estudiantes cada año"
+        image="/images/glocal_icpc_statistics/50_000_students.png"
+      />
+
+      <TerminalStatsSection
+        id="3_000"
+        title="3,000"
+        description="universidades en 11 paises"
+        image="/images/glocal_icpc_statistics/300_universities.png"
+      />
+
+      <GlitchStatsSection
+        id="400"
+        title="+400"
+        description="competiciones locales"
+        image="/images/glocal_icpc_statistics/400_competitions.png"
+      />
 
       {/* Segunda converge section, cual es el desafio */}
       <QuestionConvergeSection
@@ -76,4 +86,3 @@ export default function Page() {
     </main>
   );
 }
-
