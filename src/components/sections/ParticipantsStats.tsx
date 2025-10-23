@@ -39,53 +39,41 @@ export default function ParticipantsStats() {
       // Animate stat cards with wave effect
       if (statsRef.current) {
         const cards = statsRef.current.querySelectorAll(".stat-card");
-        
+
+        // Hint for smoother compositing;
+        gsap.set(cards, { willChange: "transform, opacity" });
+
         cards.forEach((card, index) => {
-          // Card entrance with 3D flip
+          // Stable transform origin to prevent layout-looking jumps
+          gsap.set(card, { transformOrigin: "center center" });
+
+          // Gentler, one-shot entrance (no reverse), smaller travel to avoid overlap
           gsap.fromTo(
             card,
-            { 
-              opacity: 0, 
-              y: 80,
-              rotateX: -90,
-              scale: 0.5,
+            {
+              opacity: 0,
+              y: 30,
+              scale: 0.92,
             },
             {
               opacity: 1,
               y: 0,
-              rotateX: 0,
               scale: 1,
-              duration: 1,
-              delay: index * 0.15,
+              duration: 0.6,
+              delay: index * 0.1,
               ease: "power3.out",
               scrollTrigger: {
                 trigger: statsRef.current,
                 start: "top 85%",
-                toggleActions: "play none none reverse",
+                toggleActions: "play none none none",
+                once: true,
               },
+              immediateRender: false,
             }
           );
 
-          // Floating animation - más lento y suave
-          gsap.to(card, {
-            y: -8,
-            duration: 3 + index * 0.5,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut",
-            delay: index * 0.3,
-          });
-
-          // Subtle rotation on scroll
-          gsap.to(card, {
-            rotateZ: index % 2 === 0 ? 2 : -2,
-            scrollTrigger: {
-              trigger: card,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: 2,
-            },
-          });
+          // Removed floating animation to prevent collisions on responsive layouts
+          // Removed rotate-on-scroll to avoid edge overlap on narrow screens
         });
       }
 
@@ -129,7 +117,7 @@ export default function ParticipantsStats() {
               if (counter) {
                 const current = Math.ceil(parseFloat(counter.innerText));
                 counter.innerText = current.toString();
-                
+
                 // Pulse on significant numbers
                 if (current % 10 === 0 && current > 0 && current < endValue) {
                   gsap.to(counter, {
@@ -160,7 +148,7 @@ export default function ParticipantsStats() {
           >
             {/* Animated background gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-secondary/5 to-tertiary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
+
             <div className="relative z-10">
               <p className="text-sm font-medium text-muted-foreground mb-2 uppercase tracking-wide">
                 {stat.label}

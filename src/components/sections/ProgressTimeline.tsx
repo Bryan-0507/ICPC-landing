@@ -17,18 +17,44 @@ export default function ProgressTimeline() {
       const events = timelineRef.current?.querySelectorAll(".timeline-event");
 
       if (events && events.length > 0) {
-        // Animación de entrada con stagger
-        gsap.from(events, {
-          opacity: 0,
-          y: 40,
-          duration: 0.4,
-          stagger: 0.05,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: timelineRef.current,
-            start: "top 75%",
-            toggleActions: "play none none reverse",
+        const items = gsap.utils.toArray<HTMLElement>(".timeline-event", timelineRef.current);
+
+        // Estado inicial para evitar parpadeos (FOUC) y saltos en first paint
+        gsap.set(items, { opacity: 0, y: 36 });
+
+        ScrollTrigger.batch(items, {
+          start: "top 85%",
+          onEnter: (batch) => {
+            gsap.to(batch as HTMLElement[], {
+              opacity: 1,
+              y: 0,
+              duration: 0.6,
+              ease: "power3.out",
+              stagger: 0.12,
+              overwrite: "auto",
+              lazy: false,
+            });
           },
+          onEnterBack: (batch) => {
+            gsap.to(batch as HTMLElement[], {
+              opacity: 1,
+              y: 0,
+              duration: 0.5,
+              ease: "power2.out",
+              stagger: 0.1,
+              overwrite: "auto",
+              lazy: false,
+            });
+          },
+          onLeave: (batch) => {
+            // Evitar animación inversa visible para que no "parpadee"
+            gsap.set(batch as HTMLElement[], { opacity: 0, y: 24 });
+          },
+          onLeaveBack: (batch) => {
+            gsap.set(batch as HTMLElement[], { opacity: 0, y: 24 });
+          },
+          interval: 0.15,
+          batchMax: 3,
         });
       }
     }, timelineRef);
@@ -71,7 +97,10 @@ function TimelineEvent({ event }: { event: typeof DONDE_ESTAMOS_CONFIG.timeline[
       className="timeline-event group relative"
     >
       {/* Card */}
-      <div className="relative bg-white/80 backdrop-blur-sm border-2 border-slate-200 group-hover:border-[#5459ab]/40 rounded-2xl p-6 h-full transition-all duration-300 group-hover:scale-[1.03] group-hover:shadow-xl">
+      <div
+        className="relative bg-white/80 backdrop-blur-sm border-2 border-slate-200 group-hover:border-[#5459ab]/40 rounded-2xl p-6 h-full transition-all duration-300 group-hover:scale-[1.03] group-hover:shadow-xl will-change-transform"
+        style={{ willChange: "transform, opacity" }}
+      >
         {/* Year Badge */}
         <div className="mb-4">
           <span className="inline-block px-4 py-2 rounded-full bg-gradient-to-r from-[#5459ab] to-[#52357b] text-white font-bold text-sm shadow-md">
@@ -80,8 +109,8 @@ function TimelineEvent({ event }: { event: typeof DONDE_ESTAMOS_CONFIG.timeline[
         </div>
 
         {/* Icon */}
-        <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
-          <IconComponent className="w-12 h-12 text-[#5459ab] stroke-[1.5]" />
+        <div className="mb-4">
+          <IconComponent className="w-12 h-12 text-[#5459ab] stroke-[1.5] block shrink-0" />
         </div>
 
         {/* Title */}

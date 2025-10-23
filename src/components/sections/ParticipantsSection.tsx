@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect, useRef, useState, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,9 +15,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-import ParticipantsStats from "./ParticipantsStats";
 import AnimatedBackground from "@/components/ui/animated-background";
-import TeamRanking from "./TeamRanking";
 import { filterAndSortTeams, calculateRanking, getInitials } from "@/lib/participants.utils";
 import { PARTICIPANTS_CONFIG, FILTER_LABELS } from "@/config/participants.config";
 
@@ -24,7 +24,7 @@ type SortBy = "score" | "alphabetical";
 export default function ParticipantsSection() {
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const kickerRef = useRef<HTMLParagraphElement>(null);
+  const kickerRef = useRef<HTMLDivElement>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<HTMLDivElement[]>([]);
@@ -110,51 +110,29 @@ export default function ParticipantsSection() {
         );
       }
 
-      // Animate filters with cascade effect
+      // Animate filters with simple fade-in (no stagger)
       if (filtersRef.current) {
-        const filterSections = filtersRef.current.querySelectorAll('& > div');
-        
-        gsap.fromTo(
-          filterSections,
-          { 
-            opacity: 0, 
-            y: 50,
-            scale: 0.9,
-            rotateX: -20
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            rotateX: 0,
-            duration: 1,
-            stagger: 0.25,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: filtersRef.current,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
+        const container = filtersRef.current;
 
-        // Animate filter buttons individually - más fluido
-        const buttons = filtersRef.current.querySelectorAll('button');
+        // Kill any previous triggers targeting the container (from earlier experiments)
+        ScrollTrigger.getAll().forEach((st) => {
+          if (st.trigger === container) st.kill();
+        });
+
         gsap.fromTo(
-          buttons,
-          { scale: 0, opacity: 0 },
+          container,
+          { opacity: 0 },
           {
-            scale: 1,
             opacity: 1,
             duration: 0.6,
-            stagger: 0.08,
-            ease: "back.out(1.5)",
-            delay: 0.3,
+            ease: 'power2.out',
             scrollTrigger: {
-              trigger: filtersRef.current,
-              start: "top 80%",
-              toggleActions: "play none none reverse",
+              trigger: container,
+              start: 'top 85%',
+              toggleActions: 'play none none none',
+              once: true,
             },
+            immediateRender: false,
           }
         );
       }
@@ -189,106 +167,108 @@ export default function ParticipantsSection() {
 
     const ctx = gsap.context(() => {
       cardRefs.current.forEach((card, index) => {
-        // Calculate position for creative entrance
+        // Calculate a small offset for variety per column (stable & responsive)
         const row = Math.floor(index / 3);
         const col = index % 3;
         const isEven = row % 2 === 0;
-        
-        // Entrance animation with 3D rotation and perspective
-        gsap.fromTo(
-          card,
-          { 
-            opacity: 0, 
-            y: 100,
-            x: isEven ? (col === 0 ? -100 : col === 2 ? 100 : 0) : (col === 0 ? 100 : col === 2 ? -100 : 0),
-            rotateY: isEven ? -45 : 45,
-            rotateX: -20,
-            scale: 0.7,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            x: 0,
-            rotateY: 0,
-            rotateX: 0,
-            scale: 1,
-            duration: 1,
-            delay: index * 0.08,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 90%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
+        const xOffset = isEven ? (col === 0 ? -40 : col === 2 ? 40 : 0) : (col === 0 ? 40 : col === 2 ? -40 : 0);
 
-        // Parallax effect on scroll
-        gsap.to(card, {
-          y: -20,
+        // Stable base state (prevents jumps on first paint & during resize)
+        gsap.set(card, {
+          opacity: 0,
+          y: 50,
+          x: xOffset,
+          scale: 0.96,
+          rotateY: isEven ? -10 : 10,
+          rotateX: -6,
+          transformOrigin: "50% 50%",
+          willChange: "transform, opacity",
+          zIndex: 1,
+        });
+
+        // One timeline per card, driven by scroll (no reverse snaps)
+        const tl = gsap.timeline({
+          defaults: { overwrite: "auto", force3D: true },
           scrollTrigger: {
             trigger: card,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: 1,
+            start: "top 90%",
+            end: "top 40%",
+            scrub: 0.6,              // progress at the speed of scroll
+            fastScrollEnd: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
           },
         });
 
-        // Hover effects with enhanced animations
+        // 1) Entrance (0 -> ~60% of the timeline)
+        tl.to(card, {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          scale: 1,
+          rotateY: 0,
+          rotateX: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          immediateRender: false,
+        });
+
+        // 2) Micro‑parallax AFTER entrance (remaining ~40%).
+        //    Uses yPercent so it doesn't fight with the y from the entrance.
+        tl.to(card, {
+          yPercent: -6,
+          duration: 0.4,
+          ease: "none",
+        });
+
+        // Gentle hover that doesn't fight with the scroll timeline
         const handleMouseEnter = () => {
           gsap.to(card, {
-            scale: 1.08,
-            y: -12,
-            rotateY: 3,
-            rotateX: -3,
-            boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-            duration: PARTICIPANTS_CONFIG.animations.hoverDuration,
+            scale: 1.03,
+            y: "+= -4",
+            zIndex: 20,
+            boxShadow: "0 18px 38px -16px rgba(0,0,0,0.35)",
+            duration: 0.25,
             ease: "power2.out",
+            overwrite: "auto",
           });
-          
-          // Animate avatars on hover
           const avatars = card.querySelectorAll('.team-avatar');
-          gsap.to(avatars, {
-            scale: 1.15,
-            y: -5,
-            stagger: 0.05,
-            duration: 0.3,
-            ease: "back.out(2)",
-          });
+          gsap.to(avatars, { scale: 1.08, y: -3, stagger: 0.05, duration: 0.2, ease: "back.out(2)", overwrite: "auto" });
         };
-
         const handleMouseLeave = () => {
           gsap.to(card, {
             scale: 1,
             y: 0,
-            rotateY: 0,
-            rotateX: 0,
-            boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
-            duration: PARTICIPANTS_CONFIG.animations.hoverDuration,
+            zIndex: 1,
+            boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
+            duration: 0.25,
             ease: "power2.out",
+            overwrite: "auto",
           });
-          
-          // Reset avatars
           const avatars = card.querySelectorAll('.team-avatar');
-          gsap.to(avatars, {
-            scale: 1,
-            y: 0,
-            duration: 0.3,
-            ease: "power2.out",
-          });
+          gsap.to(avatars, { scale: 1, y: 0, duration: 0.2, ease: "power2.out", overwrite: "auto" });
         };
 
         card.addEventListener("mouseenter", handleMouseEnter);
         card.addEventListener("mouseleave", handleMouseLeave);
 
-        return () => {
-          card.removeEventListener("mouseenter", handleMouseEnter);
-          card.removeEventListener("mouseleave", handleMouseLeave);
-        };
+        // Store handlers on element for cleanup
+        (card as any).__enter = handleMouseEnter;
+        (card as any).__leave = handleMouseLeave;
       });
     });
 
-    return () => ctx.revert();
+    return () => {
+      cardRefs.current.forEach((card) => {
+        const enter = (card as any).__enter;
+        const leave = (card as any).__leave;
+        if (enter) card.removeEventListener("mouseenter", enter);
+        if (leave) card.removeEventListener("mouseleave", leave);
+        delete (card as any).__enter;
+        delete (card as any).__leave;
+      });
+      ctx.revert();
+    };
   }, [filteredTeams]);
 
   return (
@@ -304,25 +284,22 @@ export default function ParticipantsSection() {
         <div className="max-w-7xl mx-auto relative z-10">
           {/* Header */}
           <div className="text-center mb-12">
-            <p
-              ref={kickerRef}
-              className="text-primary font-semibold text-sm uppercase tracking-wider mb-3"
-            >
-              Equipos Competidores
-            </p>
+            <div ref={kickerRef} className="relative inline-flex items-center justify-center mx-auto mb-3">
+              {/* Ribbon core */}
+              <span className="relative z-10 px-6 py-2 text-xs md:text-sm font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-primary to-secondary rounded-full shadow-lg ring-1 ring-white/20">
+                Equipos Competidores
+              </span>
+              {/* Ribbon tails (decorative) */}
+              <span aria-hidden className="hidden md:block absolute -left-3 top-1/2 -translate-y-1/2 w-3 h-3 bg-gradient-to-r from-primary to-secondary rotate-45 rounded-[2px] shadow" />
+              <span aria-hidden className="hidden md:block absolute -right-3 top-1/2 -translate-y-1/2 w-3 h-3 bg-gradient-to-r from-secondary to-primary rotate-45 rounded-[2px] shadow" />
+            </div>
             <h2
               ref={titleRef}
-              className="font-heading text-6xl md:text-7xl lg:text-8xl font-bold bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent"
+              className="font-heading text-4xl md:text-7xl lg:text-8xl font-bold bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text my-8"
             >
               PARTICIPANTES
             </h2>
           </div>
-
-          {/* Statistics */}
-          <ParticipantsStats />
-
-          {/* Top 5 Ranking */}
-          <TeamRanking />
 
           {/* Filters */}
           <div ref={filtersRef} className="mb-12 space-y-6">
@@ -376,7 +353,7 @@ export default function ParticipantsSection() {
                   onClick={() => setSortBy("score")}
                   className={`px-5 py-2.5 rounded-full font-medium transition-all duration-300 ${
                     sortBy === "score"
-                      ? "bg-gradient-to-r from-tertiary to-primary text-white shadow-lg scale-105"
+                      ? "bg-gradient-to-r from-primary to-secondary text-white shadow-lg scale-105"
                       : "bg-white dark:bg-slate-800 text-foreground hover:shadow-md hover:scale-105"
                   }`}
                 >
@@ -386,7 +363,7 @@ export default function ParticipantsSection() {
                   onClick={() => setSortBy("alphabetical")}
                   className={`px-5 py-2.5 rounded-full font-medium transition-all duration-300 ${
                     sortBy === "alphabetical"
-                      ? "bg-gradient-to-r from-tertiary to-primary text-white shadow-lg scale-105"
+                      ? "bg-gradient-to-r from-secondary to-primary text-white shadow-lg scale-105"
                       : "bg-white dark:bg-slate-800 text-foreground hover:shadow-md hover:scale-105"
                   }`}
                 >

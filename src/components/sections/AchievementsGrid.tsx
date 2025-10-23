@@ -103,13 +103,13 @@ function AchievementCard({ achievement }: { achievement: typeof DONDE_ESTAMOS_CO
   return (
     <div
       ref={cardRef}
-      className="achievement-card group relative overflow-hidden"
+      className="achievement-card group relative overflow-visible isolate hover:z-20 transform-gpu transition-transform duration-300 hover:scale-[1.02]"
     >
       {/* Fondo con gradiente */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${achievement.gradient} opacity-10 group-hover:opacity-20 transition-opacity duration-300`} />
+      <div className={`absolute inset-0 bg-gradient-to-br ${achievement.gradient} opacity-10 group-hover:opacity-20 rounded-2xl transition-opacity duration-300`} />
       
       {/* Border glow effect */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${achievement.gradient} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-300`} />
+      <div className={`absolute inset-0 bg-gradient-to-br ${achievement.gradient} opacity-0 group-hover:opacity-30 blur-xl rounded-2xl transition-opacity duration-300`} />
       
       {/* Card content */}
       <div className="relative bg-white/80 backdrop-blur-sm border-2 border-slate-200 group-hover:border-slate-300 rounded-2xl p-8 transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-xl">

@@ -227,7 +227,7 @@ export default function TerminalStatsSection({
       {/* Text content */}
       <div className="relative z-30 max-w-4xl text-center terminal-content">
         <div className="relative inline-block">
-          <h2 className="terminal-title font-heading text-4xl md:text-[17.942rem] font-bold leading-tight tracking-tight text-gray-100">
+          <h2 className="stats-title font-heading text-8xl md:text-[10.942rem] lg:text-[17.942rem] font-bold text-gray-100 leading-tight tracking-tight">
             {title}
           </h2>
           {/* Blinking cursor - cyan accent */}
@@ -247,7 +247,7 @@ export default function TerminalStatsSection({
             </span>
           )}
         </div>
-        <p className="terminal-desc mx-auto max-w-2xl text-base md:text-xl font-semibold mt-4 text-gray-100">
+        <p className="stats-desc mx-auto max-w-2xl mt-5 text-base text-gray-300 md:text-xl font-extrabold uppercase">
           {description}
         </p>
       </div>

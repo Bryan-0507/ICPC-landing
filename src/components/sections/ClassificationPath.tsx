@@ -14,40 +14,120 @@ export default function ClassificationPath() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      const steps = sectionRef.current?.querySelectorAll(".path-step");
-      const connectors = sectionRef.current?.querySelectorAll(".path-connector");
+      const steps = gsap.utils.toArray<HTMLElement>(".path-step", sectionRef.current);
+      const connectors = gsap.utils.toArray<HTMLElement>(".path-connector", sectionRef.current);
 
-      if (steps && steps.length > 0) {
-        // Animar steps con stagger
-        gsap.from(steps, {
-          opacity: 0,
-          x: -40,
-          duration: 0.5,
-          stagger: 0.15,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-            toggleActions: "play none none reverse",
-          },
-        });
+      // Estados iniciales para evitar parpadeos (FOUC)
+      gsap.set(steps, { opacity: 0, y: 36 });
+      const stepIcons = steps
+        .map((s) => s.querySelector(".path-icon"))
+        .filter(Boolean) as HTMLElement[];
+      if (stepIcons.length) gsap.set(stepIcons, { opacity: 0, scale: 0.88, rotate: -6 });
 
-        // Animar conectores con delay
-        if (connectors && connectors.length > 0) {
-          gsap.from(connectors, {
-            scaleY: 0,
-            transformOrigin: "top",
-            duration: 0.4,
-            stagger: 0.15,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: sectionRef.current,
-              start: "top 75%",
-              toggleActions: "play none none reverse",
-            },
+      const connectorLines = connectors
+        .map((c) => c.querySelector(".connector-line"))
+        .filter(Boolean) as HTMLElement[];
+      if (connectorLines.length) gsap.set(connectorLines, { scaleY: 0, transformOrigin: "top" });
+
+      const connectorChevrons = connectors
+        .map((c) => c.querySelector("svg"))
+        .filter((el): el is SVGSVGElement => el instanceof SVGSVGElement);
+      if (connectorChevrons.length) gsap.set(connectorChevrons, { opacity: 0, y: -6 });
+
+      // Batch para STEPS (tarjetas)
+      ScrollTrigger.batch(steps, {
+        start: "top 85%",
+        onEnter: (batch) => {
+          const els = batch as HTMLElement[];
+          gsap.to(els, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: "power3.out",
+            stagger: 0.12,
+            overwrite: "auto",
+            lazy: false,
           });
-        }
-      }
+          const icons = els
+            .map((s) => s.querySelector(".path-icon"))
+            .filter(Boolean) as HTMLElement[];
+          if (icons.length)
+            gsap.to(icons, {
+              opacity: 1,
+              scale: 1,
+              rotate: 0,
+              duration: 0.5,
+              ease: "back.out(1.4)",
+              stagger: 0.12,
+              overwrite: "auto",
+              lazy: false,
+            });
+        },
+        onEnterBack: (batch) => {
+          const els = batch as HTMLElement[];
+          gsap.to(els, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+            stagger: 0.1,
+            overwrite: "auto",
+            lazy: false,
+          });
+        },
+        onLeaveBack: (batch) => {
+          const els = batch as HTMLElement[];
+          gsap.set(els, { opacity: 0, y: 24 });
+          const icons = els
+            .map((s) => s.querySelector(".path-icon"))
+            .filter(Boolean) as HTMLElement[];
+          if (icons.length) gsap.set(icons, { opacity: 0, scale: 0.88, rotate: -6 });
+        },
+        interval: 0.15,
+        batchMax: 3,
+      });
+
+      // Batch para CONNECTORS (línea + chevron)
+      ScrollTrigger.batch(connectors, {
+        start: "top 85%",
+        onEnter: (batch) => {
+          const cons = batch as HTMLElement[];
+          const lines = cons
+            .map((c) => c.querySelector(".connector-line"))
+            .filter(Boolean) as HTMLElement[];
+          if (lines.length)
+            gsap.to(lines, {
+              scaleY: 1,
+              duration: 0.45,
+              ease: "power2.out",
+              stagger: 0.1,
+            });
+          const chevs = cons
+            .map((c) => c.querySelector("svg"))
+            .filter((el): el is SVGSVGElement => el instanceof SVGSVGElement);
+          if (chevs.length)
+            gsap.to(chevs, {
+              opacity: 1,
+              y: 0,
+              duration: 0.35,
+              ease: "power2.out",
+              stagger: 0.1,
+            });
+        },
+        onLeaveBack: (batch) => {
+          const cons = batch as HTMLElement[];
+          const lines = cons
+            .map((c) => c.querySelector(".connector-line"))
+            .filter(Boolean) as HTMLElement[];
+          if (lines.length) gsap.set(lines, { scaleY: 0 });
+          const chevs = cons
+            .map((c) => c.querySelector("svg"))
+            .filter((el): el is SVGSVGElement => el instanceof SVGSVGElement);
+          if (chevs.length) gsap.set(chevs, { opacity: 0, y: -6 });
+        },
+        interval: 0.15,
+        batchMax: 3,
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -123,17 +203,20 @@ export default function ClassificationPath() {
                 {/* Step Card */}
                 <div className="path-step flex items-start gap-6 mb-8">
                   {/* Icon Circle */}
-                  <div className={`flex-shrink-0 w-20 h-20 rounded-full bg-gradient-to-br ${styles.iconBg} flex items-center justify-center shadow-lg relative`}>
+                  <div className={`path-icon flex-shrink-0 w-20 h-20 rounded-full bg-gradient-to-br ${styles.iconBg} flex items-center justify-center shadow-lg relative`}>
                     <IconComponent className="w-10 h-10 text-white stroke-[1.5]" />
                     {styles.statusIcon && (
-                      <div className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-white shadow-md flex items-center justify-center">
+                      <div className="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-slate-700 shadow-md flex items-center justify-center">
                         {styles.statusIcon}
                       </div>
                     )}
                   </div>
 
                   {/* Content */}
-                  <div className={`flex-1 bg-white/80 backdrop-blur-sm border-2 ${styles.borderColor} rounded-2xl p-6 hover:shadow-xl transition-all duration-300`}>
+                  <div
+                    className={`flex-1 bg-white/80 backdrop-blur-sm border-2 ${styles.borderColor} rounded-2xl p-6 hover:shadow-xl transition-all duration-300 will-change-transform`}
+                    style={{ willChange: "transform, opacity" }}
+                  >
                     <div className="flex items-center gap-3 mb-3 flex-wrap">
                       <span className={`px-4 py-1.5 bg-gradient-to-r ${styles.dateColor} text-sm font-bold rounded-full border`}>
                         {step.date}
@@ -170,9 +253,24 @@ export default function ClassificationPath() {
 
                 {/* Connector Arrow */}
                 {index < classificationPath.length - 1 && (
-                  <div className="path-connector flex items-center justify-center my-4 ml-10">
-                    <div className={`w-0.5 h-8 bg-gradient-to-b ${styles.badgeGradient}`} />
-                    <LucideIcons.ChevronDown className={`absolute w-6 h-6 translate-y-3`} style={{ color: styles.iconBg.includes('5459ab') ? '#5459ab' : styles.iconBg.includes('green') ? '#059669' : styles.iconBg.includes('red') ? '#dc2626' : styles.iconBg.includes('yellow') ? '#d97706' : '#5459ab' }} />
+                  <div className="path-connector relative flex items-center justify-center my-4 ml-10">
+                    {/* vertical stem, thicker and rounded */}
+                    <div className={`connector-line relative z-0 w-[3px] h-8 mb-[12px] bg-gradient-to-b ${styles.badgeGradient}`} />
+                    {/* chevron head slightly overlapping the stem */}
+                    <LucideIcons.ChevronDown
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 -translate-y-[3px] w-8 h-8 pointer-events-none z-10 stroke-[2]"
+                      style={{
+                        color: styles.iconBg.includes("5459ab")
+                          ? "#5459ab"
+                          : styles.iconBg.includes("green")
+                          ? "#059669"
+                          : styles.iconBg.includes("red")
+                          ? "#dc2626"
+                          : styles.iconBg.includes("yellow")
+                          ? "#d97706"
+                          : "#5459ab",
+                      }}
+                    />
                   </div>
                 )}
               </div>

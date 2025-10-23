@@ -68,20 +68,7 @@ export default function Page() {
       {/* Sección de Dónde Estamos */}
       <WhereWeAreSection />
 
-      <section
-        id="next-objective"
-        className="snap-start min-h-screen grid place-items-center px-6 bg-slate-200"
-      >
-        <div className="max-w-4xl">
-          <h2 className="font-heading text-4xl md:text-5xl font-semibold">
-            Próximo objetivo
-          </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
-            ver como ponemos la data
-          </p>
-        </div>
-      </section>
-
+      {/* Particpantes */}
       <ParticipantsSection />
     </main>
   );
