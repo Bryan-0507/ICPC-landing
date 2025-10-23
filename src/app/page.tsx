@@ -5,6 +5,7 @@ import GlitchStatsSection from "@/components/sections/GlitchStatsSection";
 import ModernStatsSection from "@/components/sections/ModernStatsSection";
 import ParticipantsSection from "@/components/sections/ParticipantsSection";
 import WhereWeAreSection from "@/components/sections/WhereWeAreSection";
+import Footer from "@/components/shared/Footer";
 
 export default function Page() {
   return (
@@ -18,6 +19,7 @@ export default function Page() {
 
       {/* Primer converge section, solo como intro */}
       <QuestionConvergeSection
+        id="que-es-icpc"
         title="El concurso de programación más antiguo, el más grande y el más importante"
         kicker="¿Qué es el ICPC?"
         images={[
@@ -31,21 +33,21 @@ export default function Page() {
       />
 
       <ModernStatsSection
-        id="50_000"
+        id="estadisticas"
         title="50,000"
         description="estudiantes cada año"
         image="/images/glocal_icpc_statistics/50_000_students.png"
       />
 
       <TerminalStatsSection
-        id="3_000"
+        id="universidades"
         title="3,000"
         description="universidades en 11 paises"
         image="/images/glocal_icpc_statistics/300_universities.png"
       />
 
       <GlitchStatsSection
-        id="400"
+        id="competiciones"
         title="+400"
         description="competiciones locales"
         image="/images/glocal_icpc_statistics/400_competitions.png"
@@ -53,6 +55,7 @@ export default function Page() {
 
       {/* Segunda converge section, cual es el desafio */}
       <QuestionConvergeSection
+        id="desafio"
         title="Equipos de tres integrantes compiten contra el reloj para resolver problemas algorítmicos"
         kicker="¿Cuál es el desafío?"
         images={[
@@ -70,6 +73,9 @@ export default function Page() {
 
       {/* Particpantes */}
       <ParticipantsSection />
+
+      {/* Footer */}
+      <Footer />
     </main>
   );
 }
