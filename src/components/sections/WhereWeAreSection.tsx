@@ -168,7 +168,7 @@ export default function WhereWeAreSection() {
       <ClassificationPath />
 
       {/* Separador visual */}
-      <div className="h-24" />
+      <div className="h-12" />
 
       {/* Timeline */}
       <ProgressTimeline />

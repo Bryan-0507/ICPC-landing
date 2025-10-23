@@ -558,7 +558,7 @@ export default function ModernStatsSection({
       </div>
 
       {/* Text content */}
-      <div className="relative z-30 max-w-4xl text-center stats-content">
+      <div className="relative z-30 text-center stats-content">
         <h2 className="stats-title font-heading text-8xl md:text-[10.942rem] lg:text-[17.942rem] font-bold text-gray-100 leading-tight tracking-tight">
           {title}
         </h2>
