@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { useEffect, useRef, useState, useMemo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -13,9 +15,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "@/components/ui/dialog";
-import ParticipantsStats from "./ParticipantsStats";
 import AnimatedBackground from "@/components/ui/animated-background";
-import TeamRanking from "./TeamRanking";
 import { filterAndSortTeams, calculateRanking, getInitials } from "@/lib/participants.utils";
 import { PARTICIPANTS_CONFIG, FILTER_LABELS } from "@/config/participants.config";
 
