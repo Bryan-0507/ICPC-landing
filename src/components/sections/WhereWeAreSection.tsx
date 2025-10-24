@@ -124,10 +124,10 @@ export default function WhereWeAreSection() {
     <section
       ref={sectionRef}
       id="donde-estamos"
-      className="relative w-full overflow-hidden bg-gradient-to-b from-slate-50 via-blue-50/30 to-white"
+      className="relative w-full overflow-visible bg-gradient-to-b from-slate-50 via-blue-50/30 to-white"
     >
       {/* Decorative gradient orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-visible pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-gradient-to-br from-[#5459ab]/20 to-[#648db3]/20 rounded-full blur-3xl" />
         <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-gradient-to-br from-[#52357b]/15 to-[#5459ab]/15 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-1/3 w-[600px] h-[600px] bg-gradient-to-br from-[#648db3]/15 to-blue-200/15 rounded-full blur-3xl" />
