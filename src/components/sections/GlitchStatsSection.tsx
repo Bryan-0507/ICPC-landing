@@ -239,7 +239,7 @@ export default function GlitchStatsSection({
       )}
 
       {/* Text content with glitch effects */}
-      <div className="relative z-30 max-w-4xl text-center glitch-content">
+      <div className="relative z-30 text-center glitch-content">
         <h2
           ref={titleRef}
           className={`glitch-title font-heading text-8xl md:text-[10.942rem] lg:text-[17.942rem] font-bold text-gray-100 leading-tight tracking-tight`}

@@ -225,7 +225,7 @@ export default function TerminalStatsSection({
       </div>
 
       {/* Text content */}
-      <div className="relative z-30 max-w-4xl text-center terminal-content">
+      <div className="relative z-30 text-center terminal-content">
         <div className="relative inline-block">
           <h2 className="stats-title font-heading text-8xl md:text-[10.942rem] lg:text-[17.942rem] font-bold text-gray-100 leading-tight tracking-tight">
             {title}
