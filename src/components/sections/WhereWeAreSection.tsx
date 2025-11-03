@@ -33,7 +33,7 @@ export default function WhereWeAreSection() {
           scrollTrigger: {
             trigger: heroRef.current,
             start: "top 75%",
-            toggleActions: "play none none reverse",
+            toggleActions: "play none none none",
           },
         });
 
@@ -178,52 +178,6 @@ export default function WhereWeAreSection() {
 
       {/* Regional Map */}
       <RegionalMap />
-
-      {/* Separador visual */}
-      <div className="h-24" />
-
-      {/* Context Section */}
-      <div ref={contextRef} className="relative z-10 container mx-auto px-4 py-20">
-        <div className="max-w-5xl mx-auto">
-          <h3 className="font-heading text-6xl md:text-7xl font-bold text-slate-800 mb-12 text-center">
-            Contexto Regional
-          </h3>
-          <div className="space-y-6">
-            <p className="context-paragraph text-lg md:text-xl text-slate-600 leading-relaxed">
-              ICPC (International Collegiate Programming Contest) es la competencia de programación universitaria más antigua, grande y prestigiosa del mundo. Desde su fundación en 1977, ha reunido a millones de estudiantes de todo el planeta en un desafío que combina algoritmos, trabajo en equipo y pensamiento crítico.
-            </p>
-            <p className="context-paragraph text-lg md:text-xl text-slate-600 leading-relaxed">
-              Centroamérica ha sido parte activa de ICPC desde el año 2000, cuando Guatemala se convirtió en el primer país de la región en participar. Desde entonces, Costa Rica (2005) y El Salvador (2016) se han sumado a esta comunidad global, consolidando una presencia cada vez más fuerte en el panorama latinoamericano.
-            </p>
-            <p className="context-paragraph text-lg md:text-xl text-slate-600 leading-relaxed">
-              Hoy en día, más de 95 equipos de 23 universidades compiten anualmente en el clasificatorio regional, demostrando el crecimiento sostenido y el compromiso de nuestras instituciones con la excelencia en ciencias de la computación.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* Separador visual */}
-      <div className="h-24" />
-
-      {/* Vision Section */}
-      <div ref={visionRef} className="relative z-10 container mx-auto px-4 py-20 pb-32">
-        <div className="max-w-5xl mx-auto">
-          <h3 className="font-heading text-6xl md:text-7xl font-bold text-slate-800 mb-12 text-center">
-            Visión y Futuro
-          </h3>
-          <div className="space-y-6">
-            <p className="vision-paragraph text-lg md:text-xl text-slate-600 leading-relaxed">
-              El éxito reciente de equipos centroamericanos, como la histórica clasificación del TEC Alajuela a las Finales Mundiales 2024 y 2025, marca un antes y un después para nuestra región. Estos logros demuestran que Centroamérica no solo participa, sino que compite al más alto nivel.
-            </p>
-            <p className="vision-paragraph text-lg md:text-xl text-slate-600 leading-relaxed">
-              Mirando hacia adelante, nuestra meta es consolidar a Centroamérica como una potencia regional en programación competitiva, inspirando a más estudiantes a desarrollar sus habilidades algorítmicas y abrir puertas hacia carreras tecnológicas de alcance global.
-            </p>
-            <p className="vision-paragraph text-lg md:text-xl text-slate-600 leading-relaxed">
-              Con cada competencia, forjamos una comunidad más sólida de programadores talentosos que representan el futuro digital de nuestra región. El camino hacia el World Finals continúa, y Centroamérica está lista para el desafío.
-            </p>
-          </div>
-        </div>
-      </div>
 
       {/* Bottom gradient fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent pointer-events-none" />

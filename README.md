@@ -1,25 +1,35 @@
-# Next.js Starter Template
+# ICPC Landing
 
-This is a comprehensive starter template for modern web applications built with Next.js. It's designed to be used as a starting point for any new web project requiring Next.js, providing a solid foundation with essential development tools and best practices pre-configured.
+## Qué contiene la landing?
 
-## What's Included
+Esta landing page está diseñada para mostrar información sobre la competencia ICPC (International Collegiate Programming Contest) e incluye las siguientes secciones principales:
 
-- **Next.js 15.3.4** - The latest version of Next.js with App Router
-- **React 19** - The latest version of React with modern features
-- **TypeScript** - Full TypeScript support with type checking
-- **Tailwind CSS 4** - Modern utility-first CSS framework
-- **ESLint** - Code linting with Next.js optimized configuration
-- **Husky** - Git hooks for automated quality checks
-- **Commitlint** - Conventional commit message linting
-- **Turbopack** - Ultra-fast bundler for development
+- **Hero Section**: Una sección principal con animaciones atractivas.
+- **Estadísticas y Logros**: Muestra las estadísticas clave de la competencia.
+- **Progreso y Clasificación**: Incluye línea de tiempo interactiva para cada uno de los sucesos relevantes que han ocurrido, y que están por venir.
+- **Nuestra Trayectoria**: Muestra la trayectoria de la competencia ICPC en Centroamérica.
+- **Sección de Participantes**: Lista completa de equipos participantes con sus respectivas universidades y puntuaciones.
 
-## Quality Assurance Features
+Cada sección ha sido diseñada con animaciones fluidas y un diseño responsivo para ofrecer la mejor experiencia de usuario en todos los dispositivos.
 
-### Git Hooks (Husky)
-- **Pre-commit hook**: Runs linting and type checking before commits
-- **Commit-msg hook**: Validates commit messages using conventional commit format
+## Lo que incluye
 
-### Scripts
-- `npm run validate` - Runs both linting and type checking
-- `npm run typecheck` - TypeScript type checking
-- `npm run lint` - ESLint code linting
+- **Next.js 15.3.4** - La última versión de Next.js con App Router
+- **React 19** - La última versión de React con características modernas
+- **TypeScript** - Soporte completo de TypeScript con verificación de tipos
+- **Tailwind CSS 4** - Marco de CSS moderno con enfoque en utilidades
+- **ESLint** - Análisis de código con configuración optimizada para Next.js
+- **Husky** - Hooks de Git para verificaciones de calidad automatizadas
+- **Commitlint** - Validación de mensajes de commit siguiendo el formato convencional
+- **Turbopack** - Empaquetador ultrarrápido para desarrollo
+
+## Características de Aseguramiento de Calidad
+
+### Hooks de Git (Husky)
+- **Pre-commit hook**: Ejecuta análisis de código y verificación de tipos antes de los commits
+- **Commit-msg hook**: Valida los mensajes de commit usando el formato convencional
+
+### Comandos
+- `npm run validate` - Ejecuta tanto el análisis de código como la verificación de tipos
+- `npm run typecheck` - Verificación de tipos de TypeScript
+- `npm run lint` - Análisis de código con ESLint
